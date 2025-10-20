@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 text-center">
+  <h2 class="text-primary mb-4">Salary Slip</h2>
+
+  <div class="card mx-auto shadow-lg p-4" style="max-width: 500px;">
+    <h4>{{ employee.user.first_name }} {{ employee.user.last_name }}</h4>
+    <p><strong>Position:</strong> {{ employee.position }}</p>
+    <hr>
+    <p><strong>Base Salary:</strong> ${{ employee.base_salary }}</p>
+    <p><strong>Bonus:</strong> ${{ employee.bonus }}</p>
+    <p><strong>Deductions:</strong> ${{ employee.deductions }}</p>
+    <hr>
+    <h5 class="text-success">Total: ${{ employee.total_salary }}</h5>
+  </div>
+</div>
+{% endblock %}

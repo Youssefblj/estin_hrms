@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+  }
+
+  .auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .auth-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    width: 420px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .auth-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+  }
+
+  .auth-title {
+    font-weight: 600;
+    color: #2a5298;
+  }
+
+  .btn-primary {
+    background: #2a5298;
+    border: none;
+    transition: 0.3s;
+  }
+
+  .btn-primary:hover {
+    background: #1e3c72;
+  }
+
+  .top-right-link {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+  }
+
+  /* ✅ Password conditions box */
+  .password-conditions {
+    display: none;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-size: 13px;
+    text-align: left;
+    margin-top: 10px;
+    border-left: 4px solid #2a5298;
+  }
+
+  .password-conditions ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .password-conditions li {
+    margin-bottom: 4px;
+    color: #555;
+  }
+
+  .password-conditions li.valid {
+    color: #198754;
+    font-weight: 500;
+  }
+
+  .password-conditions li.invalid {
+    color: #dc3545;
+  }
+</style>
+
+<!-- ✅ Login button on top right -->
+<div class="top-right-link">
+  <a href="{% url 'login' %}" class="btn btn-outline-light bg-white text-primary fw-semibold px-4 py-2 shadow-sm rounded-pill">
+    Connexion
+  </a>
+</div>
+
+<!-- ✅ Centered Register Card -->
+<div class="auth-container">
+  <div class="auth-card text-center">
+    <img src="{% static 'images/registericone.png' %}" alt="register icon" width="70" class="mb-3">
+    <h3 class="auth-title mb-4">Create Your Account ✨</h3>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <!-- Django form fields -->
+      {{ form.username.label_tag }}
+      {{ form.username }}
+
+      {{ form.email.label_tag }}
+      {{ form.email }}
+
+      {{ form.role.label_tag }}
+      {{ form.role }}
+
+      {{ form.password1.label_tag }}
+      <input type="password" name="password1" id="password1" class="form-control" required>
+
+      <!-- ✅ Password conditions (hidden by default) -->
+      <div id="password-conditions" class="password-conditions">
+        <ul>
+          <li id="length" class="invalid">At least 8 characters</li>
+          <li id="number" class="invalid">Contains a number</li>
+          <li id="letter" class="invalid">Contains a letter</li>
+        </ul>
+      </div>
+
+      {{ form.password2.label_tag }}
+      {{ form.password2 }}
+
+      <button type="submit" class="btn btn-primary w-100 py-2 rounded-pill mt-3">Register</button>
+    </form>
+
+    {% if messages %}
+      <div class="mt-3">
+        {% for message in messages %}
+          <div class="alert alert-info p-2 mt-2 mb-0 small">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ✅ JS for showing and validating password conditions -->
+<script>
+  const passwordInput = document.getElementById("password1");
+  const conditionsBox = document.getElementById("password-conditions");
+
+  const lengthCondition = document.getElementById("length");
+  const numberCondition = document.getElementById("number");
+  const letterCondition = document.getElementById("letter");
+
+  passwordInput.addEventListener("focus", () => {
+    conditionsBox.style.display = "block";
+  });
+
+  passwordInput.addEventListener("blur", () => {
+    if (!passwordInput.value) {
+      conditionsBox.style.display = "none";
+    }
+  });
+
+  passwordInput.addEventListener("input", () => {
+    const value = passwordInput.value;
+
+    // Length
+    if (value.length >= 8) {
+      lengthCondition.classList.add("valid");
+      lengthCondition.classList.remove("invalid");
+    } else {
+      lengthCondition.classList.add("invalid");
+      lengthCondition.classList.remove("valid");
+    }
+
+    // Number
+    if (/\d/.test(value)) {
+      numberCondition.classList.add("valid");
+      numberCondition.classList.remove("invalid");
+    } else {
+      numberCondition.classList.add("invalid");
+      numberCondition.classList.remove("valid");
+    }
+
+    // Letter
+    if (/[A-Za-z]/.test(value)) {
+      letterCondition.classList.add("valid");
+      letterCondition.classList.remove("invalid");
+    } else {
+      letterCondition.classList.add("invalid");
+      letterCondition.classList.remove("valid");
+    }
+  });
+</script>
+{% endblock %}

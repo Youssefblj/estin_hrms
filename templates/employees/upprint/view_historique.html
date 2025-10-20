@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h3 class="text-center mb-4">Historique - {{ fonctionnaire.nom }} {{ fonctionnaire.prenom }}</h3>
+
+  {% if historique %}
+  <table class="table table-bordered text-center">
+    <thead class="table-dark">
+      <tr>
+        <th>Date</th>
+        <th>Type d’action</th>
+        <th>Détails</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for h in historique %}
+      <tr>
+        <td>{{ h.date_action|date:"M d, Y" }}</td>
+        <td>{{ h.type_action }}</td>
+        <td>{{ h.details }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-center">Aucun historique disponible.</p>
+  {% endif %}
+</div>
+{% endblock %}

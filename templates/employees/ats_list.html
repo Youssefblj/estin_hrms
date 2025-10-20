@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4"> Liste des ATS</h2>
+
+    <form method="GET" action="{% url 'list_ats' %}" class="mb-4 text-center">
+        <input type="text" name="q" placeholder="Rechercher par nom d'utilisateur..." value="{{ query|default:'' }}" class="form-control w-50 d-inline-block">
+        <button type="submit" class="btn btn-primary"> Rechercher</button>
+    </form>
+
+    {% if employees %}
+        <table class="table table-bordered text-center shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nom d'utilisateur</th>
+                    <th>Position</th>
+                    <th>Salaire de base</th>
+                    <th>Date de recrutement</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <td>{{ emp.id }}</td>
+                    <td>{{ emp.user.username }}</td>
+                    <td>{{ emp.position }}</td>
+                    <td>{{ emp.base_salary }}</td>
+                    <td>{{ emp.date_rec }}</td>
+                    <td>
+                        <a href="{% url 'delete_ats' emp.id %}" class="btn btn-danger btn-sm" 
+                           onclick="return confirm('هل أنت متأكد من الحذف؟');">
+                           Supprimer
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-center text-muted">Aucun employé trouvé.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

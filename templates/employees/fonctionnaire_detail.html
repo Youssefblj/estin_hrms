@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .profile-container {
+    display: flex;
+    gap: 30px;
+    padding: 20px;
+  }
+
+  /* الشريط الجانبي */
+  .sidebar {
+    background-color: #212529;
+    color: white;
+    border-radius: 15px;
+    width: 280px;
+    padding: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar h4 {
+    border-bottom: 2px solid #495057;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+  }
+
+  .sidebar a {
+    color: #dee2e6;
+    display: block;
+    padding: 6px 0;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+
+  .sidebar a:hover {
+    color: #0d6efd;
+    margin-left: 4px;
+  }
+
+  /* ملف الصورة والاسم */
+  .profile-info {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .profile-info img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #0d6efd;
+    margin-bottom: 10px;
+  }
+
+  /* القسم الأيمن (معلومات الموظف) */
+  .details-section {
+    flex-grow: 1;
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .details-section h3 {
+    margin-bottom: 25px;
+  }
+
+  .details-table th {
+    width: 200px;
+    background-color: #f1f3f5;
+  }
+</style>
+
+<div class="container mt-4 profile-container">
+
+  <!-- القسم الأيسر: الصورة والقائمة -->
+  <div class="sidebar">
+    <div class="profile-info">
+      {% if fonctionnaire.photo %}
+        <img src="{{ fonctionnaire.photo.url }}" alt="Profile">
+      {% else %}
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile">
+      {% endif %}
+      <h5 class="mt-2">{{ fonctionnaire.nom }} {{ fonctionnaire.prenom }}</h5>
+    </div>
+
+   <h4>⚙️ Mise à jour</h4>
+<a href="{% url 'update_paie' fonctionnaire.id %}">📄 Paie</a>
+<a href="{% url 'update_promotion' fonctionnaire.id %}">⬆️ Promotion</a>
+<a href="{% url 'update_echelon' fonctionnaire.id %}">📈 Échelon</a>
+<a href="{% url 'update_prime' fonctionnaire.id %}">💰 Prime</a>
+<a href="{% url 'update_conge' fonctionnaire.id %}">🗓 Congé</a>
+<a href="{% url 'view_historique' fonctionnaire.id %}">🕓 Historique</a>
+
+<h4 class="mt-4">🖨 Imprimer</h4>
+<a href="{% url 'print_fiche_paie' fonctionnaire.id %}">📑 Fiche de paie</a>
+<a href="{% url 'print_attestation_travail' fonctionnaire.id %}">📜 Attestation de travail</a>
+<a href="{% url 'print_titre_conge' fonctionnaire.id %}">🎟 Titre de congé</a>
+  </div>
+
+  <!-- القسم الأيمن: المعلومات -->
+  <div class="details-section">
+    <h3>Employee Information</h3>
+    <table class="table table-bordered details-table">
+      <tr>
+        <th>ID</th>
+        <td>{{ fonctionnaire.id }}</td>
+      </tr>
+      <tr>
+        <th>Last Name</th>
+        <td>{{ fonctionnaire.nom }}</td>
+      </tr>
+      <tr>
+        <th>First Name</th>
+        <td>{{ fonctionnaire.prenom }}</td>
+      </tr>
+      <tr>
+        <th>Grade</th>
+        <td>{{ fonctionnaire.grade }}</td>
+      </tr>
+      <tr>
+        <th>Recruitment Date</th>
+        <td>{{ fonctionnaire.date_rec }}</td>
+      </tr>
+      <tr>
+        <th>Status</th>
+        <td>{{ fonctionnaire.statut }}</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+{% endblock %}

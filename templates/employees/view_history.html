@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container text-center my-5">
+  <h2 class="fw-bold text-secondary mb-4">View History</h2>
+  <p class="text-muted">Here you can view your past activities and updates.</p>
+
+  <div class="card shadow-sm p-4 mt-4 mx-auto" style="max-width: 800px;">
+    <table class="table table-striped table-hover">
+      <thead class="table-secondary">
+        <tr>
+          <th>Date</th>
+          <th>Action</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2025-10-15</td>
+          <td>Updated profile information</td>
+          <td><span class="badge bg-success">Completed</span></td>
+        </tr>
+        <tr>
+          <td>2025-09-30</td>
+          <td>Uploaded new document</td>
+          <td><span class="badge bg-success">Completed</span></td>
+        </tr>
+        <tr>
+          <td>2025-09-10</td>
+          <td>Changed password</td>
+          <td><span class="badge bg-warning text-dark">Pending</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

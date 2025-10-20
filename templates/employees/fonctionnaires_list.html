@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Employee List</h2>
+
+  <!-- 🔍 Search bar -->
+  <form method="GET" action="{% url 'fonctionnaires_list' %}" class="d-flex justify-content-center mb-3">
+    <input type="text" name="q" class="form-control w-50" placeholder="Search by name..." value="{{ request.GET.q }}">
+    <button type="submit" class="btn btn-primary ms-2">Search</button>
+  </form>
+
+  <!-- ➕ Add button -->
+  <div class="text-end mb-3">
+    <a href="{% url 'add_fonctionnaire' %}" class="btn btn-success">Add New Employee</a>
+  </div>
+
+  <!-- 🧾 Employee table -->
+  <table class="table table-bordered text-center align-middle shadow-sm">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Grade</th>
+        <th>Recruitment Date</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for f in fonctionnaires %}
+      <tr>
+        <td>{{ f.id }}</td>
+        <td><a href="{% url 'fonctionnaire_detail' f.id %}" class="text-decoration-none fw-bold text-primary">{{ f.nom }}</a></td>
+        <td>{{ f.prenom }}</td>
+        <td>{{ f.grade }}</td>
+        <td>{{ f.date_rec|date:"Y-m-d" }}</td>
+        <td>
+          {% if f.statut == "Actif" %}
+          <span class="badge bg-success">Actif</span>
+          {% else %}
+          <span class="badge bg-secondary">{{ f.statut }}</span>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'edit_fonctionnaire' f.id %}" class="btn btn-sm btn-primary">Edit</a>
+          <!-- Delete trigger -->
+          <button type="button"
+                  class="btn btn-sm btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteModal"
+                  data-id="{{ f.id }}"
+                  data-nom="{{ f.nom }}"
+                  data-prenom="{{ f.prenom }}"
+                  data-grade="{{ f.grade }}"
+                  data-date="{{ f.date_rec|date:'Y-m-d' }}">
+            Delete
+          </button>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7">No employees found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- 🔢 Pagination -->
+  <nav>
+    <ul class="pagination justify-content-center">
+      {% if fonctionnaires.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ fonctionnaires.previous_page_number }}">Previous</a>
+      </li>
+      {% endif %}
+
+      <li class="page-item active">
+        <span class="page-link">{{ fonctionnaires.number }}</span>
+      </li>
+
+      {% if fonctionnaires.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ fonctionnaires.next_page_number }}">Next</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <!-- ✅ Django Messages -->
+  {% if messages %}
+  <div style="margin: 15px;">
+    {% for message in messages %}
+    <div style="background-color: {% if message.tags == 'error' %}#f8d7da{% elif message.tags == 'warning' %}#fff3cd{% else %}#d1e7dd{% endif %};
+                color: black;
+                border-radius: 8px;
+                padding: 10px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+<!-- ✅ Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg">
+      <form method="post" id="deleteForm">
+        {% csrf_token %}
+        <div class="modal-header bg-light">
+          <h5 class="modal-title fw-bold" id="deleteModalLabel">Boîte de la suppression</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <p><strong>Nom :</strong> <span id="delNom"></span></p>
+          <p><strong>Prénom :</strong> <span id="delPrenom"></span></p>
+          <p><strong>Grade :</strong> <span id="delGrade"></span></p>
+          <p><strong>Date de recrutement :</strong> <span id="delDate"></span></p>
+
+          <div class="mb-3">
+            <label for="commentaire" class="form-label">Commentaire</label>
+            <textarea name="commentaire" id="commentaire" class="form-control" rows="2" placeholder="Entrez un commentaire..."></textarea>
+          </div>
+
+          <input type="hidden" name="next" value="fonctionnaires_list">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-danger">Confirmer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ JavaScript to fill modal -->
+<script>
+  const deleteModal = document.getElementById('deleteModal');
+  deleteModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const id = button.getAttribute('data-id');
+    const nom = button.getAttribute('data-nom');
+    const prenom = button.getAttribute('data-prenom');
+    const grade = button.getAttribute('data-grade');
+    const date = button.getAttribute('data-date');
+
+    document.getElementById('delNom').textContent = nom;
+    document.getElementById('delPrenom').textContent = prenom;
+    document.getElementById('delGrade').textContent = grade;
+    document.getElementById('delDate').textContent = date;
+
+    const form = document.getElementById('deleteForm');
+    form.action = `/fonctionnaires/delete/${id}/?next=fonctionnaires_list`;
+  });
+</script>
+
+{% endblock %}

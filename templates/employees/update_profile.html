@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container text-center my-5">
+  <h2 class="fw-bold text-primary mb-4">Update Profile</h2>
+  <p class="text-muted">Here you can edit and update your personal information.</p>
+
+  <div class="card shadow-sm p-4 mt-4 mx-auto" style="max-width: 600px;">
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3 text-start">
+        <label for="name" class="form-label fw-semibold">Full Name</label>
+        <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name">
+      </div>
+      <div class="mb-3 text-start">
+        <label for="email" class="form-label fw-semibold">Email Address</label>
+        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email">
+      </div>
+      <div class="mb-3 text-start">
+        <label for="phone" class="form-label fw-semibold">Phone Number</label>
+        <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter your phone number">
+      </div>
+      <button type="submit" class="btn btn-primary rounded-pill px-4">Save Changes</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Titre de congé - ESTIN HRMS</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #f7f9fb;
+            margin: 40px;
+            color: #333;
+        }
+
+        .certificate {
+            background: #fff;
+            border: 2px solid #1a237e;
+            border-radius: 10px;
+            padding: 40px;
+            max-width: 800px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #1a237e;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .header img {
+            height: 80px;
+        }
+
+        h2 {
+            color: #1a237e;
+            font-size: 24px;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        td {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        td:first-child {
+            font-weight: bold;
+            width: 40%;
+            color: #1a237e;
+        }
+
+        .footer {
+            text-align: right;
+            margin-top: 40px;
+            font-style: italic;
+            color: #555;
+        }
+
+        .btn-print {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        button {
+            background-color: #1a237e;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #3949ab;
+        }
+
+        @media print {
+            .btn-print { display: none; }
+            body { background: white; margin: 0; }
+            .certificate { box-shadow: none; border: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="certificate">
+    <div class="header">
+        <img src="/static/images/logo.png" alt="ESTIN HRMS Logo">
+        <h2>Titre de congé</h2>
+        <p><strong>ESTIN HRMS</strong> — Gestion des Ressources Humaines</p>
+    </div>
+
+    <table>
+        <tr><td>Nom :</td><td>{{ conge.fonctionnaire.nom }}</td></tr>
+        <tr><td>Prénom :</td><td>{{ conge.fonctionnaire.prenom }}</td></tr>
+        <tr><td>Type de congé :</td><td>{{ conge.type_conge }}</td></tr>
+        <tr><td>Date début :</td><td>{{ conge.date_debut }}</td></tr>
+        <tr><td>Date fin :</td><td>{{ conge.date_fin }}</td></tr>
+        <tr><td>Motif :</td><td>{{ conge.motif }}</td></tr>
+    </table>
+
+    <div class="footer">
+        <p>Fait à ESTIN le {{ conge.date_debut|date:"d F Y" }}</p>
+        <p><strong>Le Directeur des Ressources Humaines</strong></p>
+    </div>
+
+    <div class="btn-print">
+        <button onclick="window.print()">Imprimer</button>
+    </div>
+</div>
+
+</body>
+</html>

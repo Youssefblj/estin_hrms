@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5 text-center">
+  <h2 class="text-primary mb-4">Work Certificate</h2>
+
+  <div class="card shadow-lg p-4 rounded-4" style="max-width: 700px; margin: auto;">
+    <h4 class="fw-bold mb-3">Certificate of Employment</h4>
+    <p class="text-muted mb-4">
+      This is to certify that <strong>{{ employee.user.username|capfirst }}</strong> has been employed
+      as a <strong>{{ employee.position }}</strong> at <strong>ESTIN</strong>.
+    </p>
+
+    <p class="mb-4">
+      The employee has been serving since 
+      <strong>{{ employee.date_hired|date:"F j, Y" }}</strong>
+      and continues to perform duties with dedication and professionalism.
+    </p>
+
+    <p class="mb-4">Issued on: <strong>{{ today|date:"F j, Y" }}</strong></p>
+
+    <p class="fw-bold mt-5 mb-0">HR Department</p>
+    <p>ESTIN HRMS</p>
+    <a href="{% url 'download_certificate' %}" class="btn btn-success mt-4 px-4 rounded-pill">
+  Download PDF
+</a>
+
+  </div>
+</div>
+{% endblock %}

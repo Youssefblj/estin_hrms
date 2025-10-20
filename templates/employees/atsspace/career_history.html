@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-primary">Career History</h2>
+        <p class="text-muted">View your job positions and department history.</p>
+    </div>
+
+    {% if history %}
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Position Title</th>
+                        <th>Department</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in history %}
+                        <tr>
+                            <td>{{ record.position_title }}</td>
+                            <td>{{ record.department }}</td>
+                            <td>{{ record.start_date }}</td>
+                            <td>
+                                {% if record.end_date %}
+                                    {{ record.end_date }}
+                                {% else %}
+                                    <span class="text-success fw-bold">Present</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ record.description|default:"—" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="text-center mt-5">
+            <p class="text-muted fs-5">No career history records found.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

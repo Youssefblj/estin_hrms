@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container text-center my-5">
+    <div class="mb-4">
+        <h2 class="fw-bold text-primary">
+            <i class="bi bi-clipboard-check-fill text-warning"></i> ATS Space
+        </h2>
+        <p class="text-muted">
+            Here you can access ATS data, manage applications, and review submissions.
+        </p>
+    </div>
+
+    <div class="card shadow-sm border-0 mx-auto" style="max-width: 800px;">
+        <div class="card-body py-4">
+            <h5 class="text-start mb-3 fw-semibold">Administrative Employee Space</h5>
+            <p class="text-start text-muted mb-4">
+                Manage your administrative records, view work history, and download important documents.
+            </p>
+
+            <div class="d-flex flex-column gap-3">
+                <a href="{% url 'salary_slip' %}" class="btn btn-outline-primary rounded-pill py-2">
+                     View Salary Slip
+                </a>
+                <a href="{% url 'work_certificate' %}" class="btn btn-outline-success rounded-pill py-2">
+                     Download Work Certificate
+                </a>
+                <a href="{% url 'leave_request' %}" class="btn btn-outline-warning rounded-pill py-2">
+                     Request Leave
+                </a>
+                <a href="{% url 'career_history' %}" class="btn btn-outline-secondary rounded-pill py-2">
+                     View Career History
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

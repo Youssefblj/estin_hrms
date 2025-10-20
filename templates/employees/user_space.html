@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background-color: #edf0f3;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .user-space {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 60px;
+  }
+
+  .user-card {
+    width: 900px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    padding: 25px 40px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  thead {
+    background-color: #f2f3f5;
+  }
+
+  th, td {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+  }
+
+  th {
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .action-icons i {
+    font-size: 16px;
+    margin: 0 6px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .action-icons .bi-pencil-fill {
+    color: #28a745;
+  }
+
+  .action-icons .bi-trash-fill {
+    color: #e74c3c;
+  }
+
+  .action-icons i:hover {
+    transform: scale(1.2);
+  }
+
+  .add-row {
+    background-color: #e9ecef;
+    text-align: center;
+    padding: 8px 0;
+    cursor: pointer;
+    border-radius: 0 0 10px 10px;
+    transition: background 0.3s;
+  }
+
+  .add-row:hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+  /* Delete Modal Styles */
+  .modal-header {
+    background-color: #f8f9fa;
+  }
+
+  .modal-title {
+    font-weight: 600;
+  }
+
+  .modal-footer .btn-danger {
+    background-color: #dc3545;
+    border: none;
+  }
+
+  .modal-footer .btn-danger:hover {
+    background-color: #bb2d3b;
+  }
+</style>
+
+<div class="user-space">
+  <div class="user-card">
+    <table>
+      <thead>
+        <tr>
+          <th>S.S</th>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Grade</th>
+          <th>Date de recrutement</th>
+          <th>Numéro</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.ss }}</td>
+          <td>{{ user.nom }}</td>
+          <td>{{ user.prenom }}</td>
+          <td>{{ user.grade }}</td>
+          <td>{{ user.date_rec|date:"Y-m-d" }}</td>
+          <td>{{ user.telephone|default:"-" }}</td>
+          <td class="action-icons">
+            <i class="bi bi-trash-fill"
+               data-bs-toggle="modal"
+               data-bs-target="#deleteModal"
+               data-id="{{ user.id }}"
+               data-nom="{{ user.nom }}"
+               data-prenom="{{ user.prenom }}"
+               data-date="{{ user.date_rec|date:'Y-m-d' }}"
+               data-grade="{{ user.grade }}"></i>
+
+            <a href="{% url 'edit_fonctionnaire' user.id %}?next=user_space">
+              <i class="bi bi-pencil-fill"></i>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="text-muted">Aucun utilisateur trouvé</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="add-row" data-bs-toggle="modal" data-bs-target="#addModal">
+      <i class="bi bi-plus"></i>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" id="deleteForm">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Boîte de la suppression</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <p><strong>Nom:</strong> <span id="delNom"></span></p>
+          <p><strong>Prénom:</strong> <span id="delPrenom"></span></p>
+          <p><strong>Grade:</strong> <span id="delGrade"></span></p>
+          <p><strong>Date de recrutement:</strong> <span id="delDate"></span></p>
+
+          <div class="form-group">
+            <label for="commentaire">Commentaire</label>
+            <textarea name="commentaire" id="commentaire" class="form-control" rows="2"></textarea>
+          </div>
+
+          <input type="hidden" name="next" value="user_space">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-danger">Confirmer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ JS for Delete Modal -->
+<script>
+  const deleteModal = document.getElementById('deleteModal');
+  deleteModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const id = button.getAttribute('data-id');
+    const nom = button.getAttribute('data-nom');
+    const prenom = button.getAttribute('data-prenom');
+    const grade = button.getAttribute('data-grade');
+    const date = button.getAttribute('data-date');
+
+    // Fill modal info
+    document.getElementById('delNom').textContent = nom;
+    document.getElementById('delPrenom').textContent = prenom;
+    document.getElementById('delGrade').textContent = grade;
+    document.getElementById('delDate').textContent = date;
+
+    // Update form action dynamically
+    const form = document.getElementById('deleteForm');
+    form.action = `/fonctionnaires/delete/${id}/?next=user_space`;
+  });
+</script>
+
+{% endblock %}

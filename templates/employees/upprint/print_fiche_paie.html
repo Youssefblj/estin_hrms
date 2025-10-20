@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  @media print {
+    .no-print { display: none !important; }
+    body { background: white !important; margin: 0; }
+  }
+
+  body {
+    background: #f7f7f7;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .fiche-container {
+    background: white;
+    margin: 40px auto;
+    padding: 50px 70px;
+    max-width: 900px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  /* --- Header --- */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #4f46e5;
+    padding-bottom: 15px;
+  }
+
+  .company-info {
+    font-size: 14px;
+    color: #444;
+  }
+
+  .company-info h2 {
+    margin: 0;
+    font-size: 22px;
+    text-transform: uppercase;
+    color: #222;
+  }
+
+  .header img {
+    width: 90px;
+    height: auto;
+  }
+
+  /* --- Title --- */
+  .title {
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 30px;
+  }
+
+  .title h3 {
+    font-size: 22px;
+    text-transform: uppercase;
+    color: #222;
+    border-bottom: 2px solid #4f46e5;
+    display: inline-block;
+    padding-bottom: 4px;
+  }
+
+  /* --- Employee info --- */
+  .info-section {
+    margin-bottom: 25px;
+    font-size: 15px;
+  }
+
+  .info-section p {
+    margin: 6px 0;
+  }
+
+  .info-section strong {
+    width: 130px;
+    display: inline-block;
+    color: #222;
+  }
+
+  /* --- Table --- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 15px;
+  }
+
+  th, td {
+    border: 1px solid #ccc;
+    padding: 10px 12px;
+  }
+
+  th {
+    background: #f2f2f2;
+    text-align: left;
+    color: #333;
+  }
+
+  td {
+    text-align: right;
+  }
+
+  tr:nth-child(even) td {
+    background: #fafafa;
+  }
+
+  .total {
+    font-weight: bold;
+    background: #eef1ff;
+    color: #222;
+  }
+
+  /* --- Footer --- */
+  .footer {
+    margin-top: 50px;
+    text-align: right;
+    color: #555;
+    font-style: italic;
+  }
+
+  .signatures {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .signature-block {
+    text-align: center;
+    width: 45%;
+  }
+
+  .signature-block p {
+    margin-top: 60px;
+    border-top: 1px solid #999;
+    padding-top: 5px;
+    font-size: 14px;
+  }
+
+  /* --- Button --- */
+  .print-btn {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .print-btn button {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 25px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  .print-btn button:hover {
+    background-color: #3730a3;
+  }
+</style>
+
+<div class="fiche-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="company-info">
+      <h2>Société XYZ</h2>
+      <p>Département des Ressources Humaines</p>
+      <p>Adresse : 12 Rue de la Liberté, Alger</p>
+      <p>Tél : +213 21 45 67 89</p>
+    </div>
+    <img src="/static/images/logo.png" alt="Logo Société">
+  </div>
+
+  <!-- Title -->
+  <div class="title">
+    <h3>Fiche de Paie</h3>
+  </div>
+
+  <!-- Employee info -->
+  <div class="info-section">
+    <p><strong>Nom:</strong> {{ fonctionnaire.nom }}</p>
+    <p><strong>Prénom:</strong> {{ fonctionnaire.prenom }}</p>
+    <p><strong>Grade:</strong> {{ fonctionnaire.grade }}</p>
+    <p><strong>Mois:</strong> {{ paie.mois }}</p>
+    <p><strong>Année:</strong> {{ paie.annee }}</p>
+  </div>
+
+  <!-- Table -->
+  <table>
+    <tr><th>Éléments de Salaire</th><th>Montant (DA)</th></tr>
+    <tr><td>Salaire de base</td><td>{{ paie.salaire_base|floatformat:2 }}</td></tr>
+    <tr><td>Indemnités</td><td>{{ paie.indemnites|floatformat:2 }}</td></tr>
+    <tr><td>Retenues</td><td>{{ paie.retenues|floatformat:2 }}</td></tr>
+    <tr class="total"><td>Net à payer</td><td>{{ paie.net_a_payer|floatformat:2 }}</td></tr>
+  </table>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Fait à Alger, le {{ paie.date_ajout|date:"d/m/Y" }}</p>
+  </div>
+
+  <div class="signatures">
+    <div class="signature-block">
+      <p>Signature de l’employé</p>
+    </div>
+    <div class="signature-block">
+      <p>Signature du Directeur RH</p>
+    </div>
+  </div>
+
+  <!-- Print Button -->
+  <div class="print-btn no-print">
+    <button onclick="window.print()"> Imprimer la fiche</button>
+  </div>
+</div>
+
+{% endblock %}
